@@ -8,7 +8,7 @@ require("symbols-outline").setup({
     auto_close = false,
     show_numbers = false,
     show_relative_numbers = false,
-    show_symbol_details = false,
+    show_symbol_details = true,
     preview_bg_highlight = 'Pmenu',
     autofold_depth = nil,
     auto_unfold_hover = true,

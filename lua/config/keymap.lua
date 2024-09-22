@@ -23,9 +23,9 @@ vim.keymap.set('n', '<S-Down>', '<C-w>' .. d .. '-')
 vim.keymap.set('n', '<S-Left>', '<C-w>' .. d .. '<')
 vim.keymap.set('n', '<S-Right>', '<C-w>' .. d .. '>')
 -- delete without saving to register
-vim.keymap.set('n', 's', '"_d')
-vim.keymap.set('n', 'S', '"_d$')
-vim.keymap.set('n', 'ss', '"_dd')
+vim.keymap.set('n', 's', '"_d', {silent = true})
+vim.keymap.set('n', 'S', '"_d$', {silent = true})
+vim.keymap.set('n', 'ss', '"_dd', {silent = true})
 vim.keymap.set('n', '<leader>h', ':set hlsearch! hlsearch?<cr>') -- toggle hl search
 vim.keymap.set('n', '<leader>w', ':set wrap! wrap?<cr>') -- toggle wrap
 vim.keymap.set('n', '<bs>', '<c-^>') -- last file
@@ -38,9 +38,10 @@ vim.keymap.set('n', 'J', 'mzJ`z') -- dont jump on J
 vim.keymap.set('v', '*', 'y/<c-r>"<cr>')
 vim.keymap.set('v', '#', 'y?<c-r>"<cr>')
 -- add numbered j/k to jumplist
-vim.keymap.set('n', 'j', [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'j' : 'gj']], { noremap = true, expr = true })
-vim.keymap.set('n', 'k', [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'k' : 'gk']], { noremap = true, expr = true })
+vim.keymap.set('n', 'j', [[(v:count >= 3 ? "m'" . v:count : '') . 'j']], { noremap = true, expr = true })
+vim.keymap.set('n', 'k', [[(v:count >= 3 ? "m'" . v:count : '') . 'k']], { noremap = true, expr = true })
 vim.api.nvim_set_keymap('n', '<C-b>', '<C-a>', {noremap = true, silent = true}) -- tmux prefix is ctrl+a
+vim.api.nvim_set_keymap('v', 'g<C-b>', 'g<C-a>', {noremap = true, silent = true}) -- tmux prefix is ctrl+a
 vim.api.nvim_set_keymap('n', '<leader>p', ':set paste! paste?<CR>', {noremap = true}) -- toggle paste
 vim.api.nvim_set_keymap('n', '<C-b>', '<C-a>', {noremap = true, silent = true})
 -- telescope binds
@@ -53,7 +54,7 @@ vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 vim.keymap.set('n', '<leader>v', vim.cmd.SymbolsOutline)
 -- lsp binds after lsp attaches
 vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    group = vim.api.nvim_create_augroup('UserLspConfig', {clear = true}),
     callback = function(ev)
         local opts = { buffer = ev.buf }
         vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
@@ -62,5 +63,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
         vim.keymap.set('n', '<leader>s', vim.lsp.buf.document_symbol, opts)
+        vim.keymap.set('n', '<leader>S', vim.lsp.buf.workspace_symbol, opts)
+    end,
+})
+-- compile commands
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('LaTeX', {clear = true}),
+    pattern = 'tex',
+    callback = function()
+        vim.api.nvim_buf_set_keymap(0, 'n', '<f5>', ':!pdflatex %<cr>', {noremap = true})
     end,
 })

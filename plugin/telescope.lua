@@ -21,8 +21,16 @@ require('telescope').setup{
                 ["<C-k>"] = actions.move_selection_previous,
             }
         }
+    },
+    pickers = {
+        find_files = {
+            no_ignore = true,
+            hidden = true
+        }
     }
 }
+
+require('telescope').load_extension('fzf')
 
 -- disable cursorline in telescope windows
 vim.api.nvim_create_autocmd('FileType', {

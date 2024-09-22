@@ -5,6 +5,10 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" }
     },
     {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make'
+    },
+    {
         "ellisonleao/gruvbox.nvim",
         priority = 1000,
         config = true,
