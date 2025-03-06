@@ -1,4 +1,3 @@
-vim.g.mapleader = ' '
 -- Netrw
 vim.keymap.set('n', '<leader>e', vim.cmd.Ex)
 vim.keymap.set('n', '-', ':Oil<CR>', {silent = true, noremap = true})
@@ -23,9 +22,10 @@ vim.keymap.set('n', '<S-Down>', '<C-w>' .. d .. '-')
 vim.keymap.set('n', '<S-Left>', '<C-w>' .. d .. '<')
 vim.keymap.set('n', '<S-Right>', '<C-w>' .. d .. '>')
 -- delete without saving to register
-vim.keymap.set('n', 's', '"_d', {silent = true})
-vim.keymap.set('n', 'S', '"_d$', {silent = true})
-vim.keymap.set('n', 'ss', '"_dd', {silent = true})
+vim.keymap.set("n", "s", require('substitute').operator, { noremap = true })
+vim.keymap.set("n", "ss", require('substitute').line, { noremap = true })
+vim.keymap.set("n", "S", require('substitute').eol, { noremap = true })
+vim.keymap.set("x", "s", require('substitute').visual, { noremap = true })
 vim.keymap.set('n', '<leader>h', ':set hlsearch! hlsearch?<cr>') -- toggle hl search
 vim.keymap.set('n', '<leader>w', ':set wrap! wrap?<cr>') -- toggle wrap
 vim.keymap.set('n', '<bs>', '<c-^>') -- last file
@@ -62,15 +62,21 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gtd', vim.lsp.buf.type_definition, opts)
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.references, opts)
         vim.keymap.set('n', '<leader>s', vim.lsp.buf.document_symbol, opts)
         vim.keymap.set('n', '<leader>S', vim.lsp.buf.workspace_symbol, opts)
+        -- go through errors
+        vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
+        vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
     end,
 })
 -- compile commands
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('LaTeX', {clear = true}),
-    pattern = 'tex',
-    callback = function()
-        vim.api.nvim_buf_set_keymap(0, 'n', '<f5>', ':!pdflatex %<cr>', {noremap = true})
-    end,
-})
+-- vim.api.nvim_create_autocmd('FileType', {
+--     group = vim.api.nvim_create_augroup('LaTeX', {clear = true}),
+--     pattern = 'tex',
+--     callback = function()
+--         vim.api.nvim_buf_set_keymap(0, 'n', '<f5>', ':!pdflatex %<cr>', {noremap = true})
+--     end,
+-- })
+vim.api.nvim_set_keymap('n', '<leader>j', ':cnext<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>k', ':cprev<cr>', { noremap = true, silent = true })

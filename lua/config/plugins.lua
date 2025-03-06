@@ -45,4 +45,8 @@ return {
     {
         "simrat39/symbols-outline.nvim"
     },
+    {
+        "gbprod/substitute.nvim",
+        opts = {}
+    }
 }
